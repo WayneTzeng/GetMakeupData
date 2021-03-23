@@ -42,26 +42,36 @@ localtime = time.strftime("%m%d",time.localtime())
 
 
 def GetApi():
-    for q in range(1,62):
+    for q in range(22,23):
         try :
             header = {
-                "Referer":	"http://www.hantao888.com/mobile/brand.php?id="+str(q),
-                'Cache-control': 'private',
+                "Referer":	"http://taohan.kr/m/?p=shop_list&brand_id="+str(q),
                 'Connection': 'keep-alive',
-                'Content-Encoding': 'gzip',
-                'Content-Type': 'text/html; charset=utf-8',
+                'Origin': 'http://taohan.kr',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36',
+                'X-Requested-With': 'XMLHttpRequest',
+                'Host': 'taohan.kr',
+                'Content-Length': '59',
+                'Accept': 'text/html, */*; q=0.01',
+                'X-Requested-With': 'XMLHttpRequest',
+                'connect-type': 'text/html; charset=utf-8'
+                
+                
             }           
             data = {
-                'ast':'0',
-                'amount':'10',
-                
-                
+                'page': '0',
+                'table': '2',
+                'd': '14',
+                'list_id': "",
+                'brand_id': '67',
+                'type_id': "",
+                'language': "",
             }
             qq = str(q)
-            url = 'http://www.hantao888.com/mobile/brand.php?act=asynclist&category=0&brand='+qq+'&price_min=&price_max=&filter_attr=&page=1&sort=last_update&order=DESC'
+            url = 'http://taohan.kr/m/data_index.php'
             #print(url)
             resp2 = requests.post(url,headers=header,data=data).text
-            #print(resp2)
+            print(resp2)
             a = json.loads(resp2)
             P = len(a)
             #print(P)
@@ -70,29 +80,13 @@ def GetApi():
                 c = b['pro-inner']
                 soup = BeautifulSoup(c)
                 #抓取產品名稱
-                proTitle = soup.select("div.proTitle a")[0]
+                proTitle = soup.select("div.info_name a")[0]
+                print(proTitle)
                 #抓取產品金額
                 proPrice = soup.select("div.proPrice span")[0]
                 #抓取照片URL
-                imgA = str(soup.select("img")[0]['src'])
-                imgurl = 'http://www.hantao888.com' + imgA
-                print(imgurl)
-                img = requests.get(imgurl)
-                print(Getimg)
-                
-                html = requests.get(item.get('src'))   # get函式獲取圖片連結地址，requests傳送訪問請求
-                img_name = folder_path + str(index + 1) +'.png'
-                with open(img_name, 'wb') as file:  # 以byte形式將圖片資料寫入
-                    file.write(html.content)
-                    file.flush()
-                    file.close()  # 關閉檔案
-    
-                
-                
-                
-                
-                with open("C:\\GitHub_projects\\GetMakeupData\\images" + input_img + "str(proTitle.string)" + ".jpg", "wb") as file:  # 開啟資料夾及命名圖片檔
-                    file.write(img.content)  # 寫入圖片的二進位碼
+                #img = str(soup.select("img")[0]['src'])
+                #imgurl = 'http://www.hantao888.com' + img
                 #print(img)
                 #print(imgurl)
                 #EXdata = [proTitle.string,imgurl,proPrice.string]
