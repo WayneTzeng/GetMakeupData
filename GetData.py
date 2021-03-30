@@ -26,7 +26,6 @@ localtime = time.strftime("%m%d",time.localtime())
 #print(localtime)
 #driver = webdriver.Chrome(chrome_path,options=options) 
 
-#id = 1 第一個品牌
 #http://www.hantao888.com/brand.php?id=1
 #driver.get("http://www.hantao888.com/brand.php?id=1")
 #driver.find_element_by_css_selector('.head_nav_list > li:nth-child(2)').click()
@@ -146,12 +145,12 @@ def GetApi():
                     Edata = [PID,proTitle.string,imgurl,G,GG]
                     print(Edata)
                     #print(Edata)
-                wb = openpyxl.load_workbook('EcTestCase.xlsx')
+                wb = openpyxl.load_workbook('EcTestCaseTT.xlsx')
                 sheet = wb["P"]
                 #titles = ("品牌名稱","商品名稱","商品照片URL","價格","價格2")
                 #sheet.append(titles)
                 sheet.append(Edata)
-                wb.save("EcTestCase.xlsx")
+                wb.save("EcTestCaseTT.xlsx")
                     
                 
                 

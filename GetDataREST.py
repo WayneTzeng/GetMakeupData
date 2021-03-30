@@ -140,14 +140,17 @@ def GetApi():
                 #print(header['Referer'])
                 if PID[3] == '"' : 
                     #print(PID[0:3])
-                    uu = "http://www.hantao888.com/mobile/goods.php?id="+PID
+                    uu = "http://www.hantao888.com/mobile/goods.php?id="+PID+"&attr=&number=1&1616771455463463="
                     PURL = "http://www.hantao888.com/goods.php?act=price&id="+PID[0:3]+"&attr=&number=1&1616771455463463="
-                    #print(PURL)
-                    prodata = requests.get(uu,headers=header).text 
+                    print(uu)
+                    prodata = requests.get(uu,headers=header).text
+                    #print(prodata)
                     #Prodata = json.loads(prodata)
-                    Prodatasoup = BeautifulSoup(prodata)
+                    Prodatasoup = BeautifulSoup(prodata,'html.parser')
+                    #print(Prodatasoup)
                     prodata = Prodatasoup.select("a.btn-popupSKU-addcart")[0].text
-                    protext = Prodatasoup.findAll("p").text
+                    #a = Prodatasoup.find_all('br')
+                    protext = Prodatasoup.find_All("br")
                     print(protext)
                     getdata = requests.get(PURL,headers=header).text 
                     Getdata = json.loads(getdata)
@@ -161,7 +164,7 @@ def GetApi():
                     
                     Edata = [PID[0:3],proTitle.string,imgurl,G,GG,prodata]
                 
-                    #print(Edata)
+                    print(Edata)
                     
                 else:
                     #print(PID)
