@@ -35,24 +35,34 @@ localtime = time.strftime("%m%d",time.localtime())
 #b = driver.find_element_by_css_selector('div.good_box:nth-child(1) > p:nth-child(3) > font:nth-child(1)').get_attribute('text')
 #print(a)
 #print(b)
-
-
-
+def filterbrand(filter_brand):
+    if filter_brand[0] == '=' :
+        #print (filter_brand[0])
+        return str(filter_brand[1])
+    else:
+        #print (filter_brand)
+        return str(filter_brand)
 
 
 
 def GetApi():
-    for q in range(0,63):
-        u = "http://www.hantao888.com/brand.php"
-        resp = requests.get(u)
-        resp.encoding = ("utf-8")
-        html = resp.text
-        #print(html)
-        AAA = BeautifulSoup(html)
-        filter_brand = AAA.select("div.filter_brand a")[50]["title"]
-        print(filter_brand)
+    u = "http://www.hantao888.com/brand.php"
+    resp = requests.get(u)
+    resp.encoding = ("utf-8")
+    html = resp.text
+    #print(html)
+    AAA = BeautifulSoup(html)
+    filter_brand = AAA.select("div.filter_brand a")
+    NO = len(filter_brand)
+    print(NO)
+    try :
+        for q in range(0,NO):
+            filter_brand = str(AAA.select("div.filter_brand a")[q]["href"][-2:])
+            filter_brandTEST = AAA.select("div.filter_brand a")[q]["title"]
+            print(filterbrand(filter_brand)) 
+            print(filter_brandTEST)
+            
         
-        try :
             header = {
                 "Referer":	"http://www.hantao888.com/mobile/brand.php?id="+str(q),
                 'Cache-control': 'private',
@@ -66,24 +76,33 @@ def GetApi():
                 
             }
             qq = str(q)
-            #print(qq)
-            url = 'http://www.hantao888.com/mobile/brand.php?act=asynclist&category=0&brand='+qq+'&price_min=&price_max=&filter_attr=&page=1&sort=last_update&order=DESC'
-            #print(url)
+            #print(qq)``
+            url = 'http://www.hantao888.com/mobile/brand.php?act=asynclist&category=0&brand='+filterbrand(filter_brand)+'&price_min=&price_max=&filter_attr=&page=1&sort=last_update&order=DESC'
+            urlS = 'http://www.hantao888.com/mobile/brand.php?id='+filterbrand(filter_brand)
+            
+            print(urlS)
             resp2 = requests.post(url,headers=header,data=data).text
-            #print(resp2)
-
-            a = json.loads(resp2)
+            respS = requests.post(urlS)
+            
+        #print(respS)
+            #s = json.loads(respS)
+            a = json.loads(resp2) 
             P = len(a)
-            #print(P)
+            print(P)
             
             for i in range (0,P) :
 
                 b = a[i]
                 c = b['pro-inner']
-                soup = BeautifulSoup(c)
-                #print(soup)
+
+                #Ssoup = BeautifulSoup(respS.text)
+                #status = Ssoup.select("a.btn2")
+                #print(len(status))
+                #print(Ssoup)
+                #print(status)
+        
                 #抓取產品名稱
-                
+                soup = BeautifulSoup(c)
                 proTitle = soup.select("div.proTitle a")[0]
                 
                 #print(title.string)
@@ -96,6 +115,9 @@ def GetApi():
                 #print(imgurl)
                 #img = requests.get(imgurl)
                 #print(Getimg)
+
+                
+                
                 
                 #html = requests.get(item.get('src'))   # get函式獲取圖片連結地址，requests傳送訪問請求
                 #img_name = folder_path + str(index + 1) +'.png'
@@ -118,33 +140,51 @@ def GetApi():
                 #print(header['Referer'])
                 if PID[3] == '"' : 
                     #print(PID[0:3])
-                    #uu = "http://www.hantao888.com/goods.php?id="+PID
+                    uu = "http://www.hantao888.com/mobile/goods.php?id="+PID
                     PURL = "http://www.hantao888.com/goods.php?act=price&id="+PID[0:3]+"&attr=&number=1&1616771455463463="
                     #print(PURL)
+                    prodata = requests.get(uu,headers=header).text 
+                    #Prodata = json.loads(prodata)
+                    Prodatasoup = BeautifulSoup(prodata)
+                    prodata = Prodatasoup.select("a.btn-popupSKU-addcart")[0].text
+                    #protext = Prodatasoup.select("div.desc p")
+                    print(prodata)
                     getdata = requests.get(PURL,headers=header).text 
                     Getdata = json.loads(getdata)
+                    
                     #print(filter_brand,proTitle.string,Getdata["result"][6:-7],Getdata["result1"][6:-7])
                     #print(filter_brand)
                     #print(proTitle.string) 
                     G = str(Getdata["result"][6:-7])
                     GG = str(Getdata["result1"][6:-7])
-                    Edata = [PID[0:3],proTitle.string,imgurl,G,GG]
+                    
+                    
+                    Edata = [PID[3],proTitle.string,imgurl,G,GG,prodata]
                 
-                    print(Edata)
+                    #print(Edata)
                     
                 else:
                     #print(PID)
+                    uu = "http://www.hantao888.com/mobile/goods.php?id="+PID
                     PURL = "http://www.hantao888.com/goods.php?act=price&id="+PID+"&attr=&number=1&1616771455463463="
                     
+                    prodata = requests.get(uu,headers=header).text 
+                    #Prodata = json.loads(prodata)
+                    Prodatasoup = BeautifulSoup(prodata)
+                    prodata = Prodatasoup.select("a.btn-popupSKU-addcart")[0].text
+                    #protext = Prodatasoup.select("div.desc p")
+                    print(prodata)
+                    
                     getdata = requests.get(PURL,headers=header).text   
-                    Getdata = json.loads(getdata)          
+                    Getdata = json.loads(getdata)   
+                    #print(Getdata)       
                     #print(filter_brand,proTitle.string,Getdata["result"][6:-7],Getdata["result1"][6:-7])
                     #print(filter_brand)
                     #print(proTitle.string)
                     G = str(Getdata["result"][6:-7])
                     GG = str(Getdata["result1"][6:-7])
-                    Edata = [PID,proTitle.string,imgurl,G,GG]
-                    print(Edata)
+                    Edata = [PID,proTitle.string,imgurl,G,GG,prodata]
+                    #print(Edata)
                     #print(Edata)
                 wb = openpyxl.load_workbook('EcTestCase.xlsx')
                 sheet = wb["P"]
@@ -152,7 +192,8 @@ def GetApi():
                 #sheet.append(titles)
                 sheet.append(Edata)
                 wb.save("EcTestCase.xlsx")
-                    
+    except:
+        pass        
                 
                 
                 
@@ -164,8 +205,7 @@ def GetApi():
                 #EXdata = [proTitle.string,imgurl,proPrice.string]
                 
 
-        except:
-            pass
+
         
     #print(b.find_all("div","class=proTitle"))
 

@@ -23,22 +23,23 @@ options = Options()
 chrome_path = "C:\\PYTHON\\driver\\chromedriver" 
 tmap = int(time.time())
 localtime = time.strftime("%m%d",time.localtime())
-print(localtime)
-driver = webdriver.Chrome(chrome_path,options=options) 
+#print(localtime)
+#driver = webdriver.Chrome(chrome_path,options=options) 
 
 #id = 1 第一個品牌
 #http://www.hantao888.com/brand.php?id=1
-driver.get("http://taohan.kr/?language=FT&p=all_fenlei&list_id=all_goods&brand_id=82")
-a = driver.page_source
-print(a)
-driver.find_element_by_css_selector('.head_nav_list > li:nth-child(2)').click()
-driver.find_element_by_css_selector('.filter_brand > a:nth-child(1)').click()
-a = driver.find_element_by_css_selector('div.good_box:nth-child(1) > p:nth-child(2)').get_attribute('value')
-b = driver.find_element_by_css_selector('div.good_box:nth-child(1) > p:nth-child(3) > font:nth-child(1)').get_attribute('text')
-print(a)
-print(b)
+#driver.get("http://taohan.kr/?language=FT&p=all_fenlei&list_id=all_goods&brand_id=82")
+#a = driver.page_source
+#print(a)
+#driver.find_element_by_css_selector('.head_nav_list > li:nth-child(2)').click()
+#driver.find_element_by_css_selector('.filter_brand > a:nth-child(1)').click()
+#a = driver.find_element_by_css_selector('div.good_box:nth-child(1) > p:nth-child(2)').get_attribute('value')
+#b = driver.find_element_by_css_selector('div.good_box:nth-child(1) > p:nth-child(3) > font:nth-child(1)').get_attribute('text')
+#print(a)
+#print(b)
 
-
+#angelyu10
+#Yu1234
 
 
 
@@ -55,11 +56,11 @@ def GetApi():
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
         "Accept-Encoding": "gzip, deflate",
         "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
-        "Cookie": "PHPSESSID=rp8mkb2clio2ds2f7lub8cf882; isfirstvisited=false",
+        "Cookie": "isfirstvisited=false;PHPSESSID=7o3meb55d2lrdvngimd95c71c6",
         } 
     url = 'http://taohan.kr/?language=FT&p=all_fenlei&list_id=all_goods'
     #print(url)
-    resp = requests.get(url)
+    resp = requests.get(url,headers=header)
     resp.encoding = ("utf-8")
     html = resp.text
     #print(html)
@@ -75,26 +76,38 @@ def GetApi():
         #print(brand_id,title,src)
         Purl = "http://taohan.kr/?language=FT&p=all_fenlei&list_id=all_goods&brand_id="+ brand_id
         #print(Purl)
-        resp2 = requests.get(Purl)
+        resp2 = requests.get(Purl,headers=header)
         resp2.encoding = ("utf-8")
         html2 = resp2.text
         Psuop = BeautifulSoup(html2)
+        #
         #print(Psuop)
         for ii in range(0,len(Psuop.select("div.good_box"))):
             #print(len(Psuop.select("div.good_box")))
-            #print(ii)
             #product_ID = Psuop.select("div.good_box a")[ii]["href"][-4:]
-            product_name = Psuop.select("p.shop_list_name")[ii].string
-            product_src = Psuop.select("div.good_box img")[ii]["src"]
-            product_price = Psuop.select("p.shop_list_price")[ii].string[2:-4]
-            product_weight = Psuop.select("p.shop_list_weight")[ii].string[5:-4]
+            #沒有登入
+            #product_name = Psuop.select("p.shop_list_name")[ii].string
+            #product_src = Psuop.select("div.good_box img")[ii]["src"]
+            #product_price = Psuop.select("p.shop_list_price")[ii].string[2:-4]
+            #product_weight = Psuop.select("p.shop_list_weight")[ii].string[5:-4]
+                        
+            product_name = Psuop.select("p.shop_list_name")[ii].text.strip()
+            product_src = Psuop.select("div.good_box img")[ii]["src"].strip()
+            product_price = Psuop.select("p.shop_list_price")[ii].text[2:-11]
+            product_price2 = Psuop.select("p.shop_list_price_no")[ii].text.strip()
+            status = Psuop.select("a.btn2")[ii].text.strip()
+            #print(status)
+            #product_weight = Psuop.select("p.shop_list_weight")[ii].string[5:-4]
+            #\r\n\t\t\t\t\t\t   \t\t\t\t\t\t
+            #print(title,str(product_name).strip(),INGH+src,INGH+product_src,product_name,product_price,product_price2)
             
             #print(product_ID)
-            print(product_name)
+            #print(product_name)
             #print(product_src)
             #print(product_price)
             #print(product_weight)
-            Pdata = [title,product_name,INGH+src,INGH+product_src,product_price,product_weight]
+            Pdata = [title,product_name,INGH+src,INGH+product_src,product_name,product_price,product_price2,status]
+            print(Pdata)
             #Pur3 = "http://taohan.kr/?language=&p=good&id="+ product_ID
             #print(Purl)
             #resp3 = requests.get(Pur3)
