@@ -27,7 +27,7 @@ def DoNo(Dono):
     else : 
         return Dono
 
-Key = openpyxl.load_workbook('ShopData.xlsx')
+Key = openpyxl.load_workbook('ShopDataTT.xlsx')
 Sheet = Key["userdataKey"]
 rows = Sheet.rows
 
@@ -35,10 +35,10 @@ for row in list(rows):  # 遍歷每行資料
     caseOri = []   # 用於存放一行資料
     for c in row:  # 把每行的每個單元格的值取出來，存放到case裡
         caseOri.append(c.value)
-    print(caseOri)
+    print(caseOri[0])
 
-    if caseOri != "NO":
-        keyword = str(caseOri)
+    if caseOri[0] != "NO":
+        keyword = str(caseOri[0])
 
         header = {
             "Accept":	"*/*",
@@ -61,9 +61,10 @@ for row in list(rows):  # 遍歷每行資料
 
         data = requests.get(URL).text
         JData = json.loads(data)
-        Dono = len(JData["items"])
-        #判斷次數
+        Dono = int(len(JData["items"]))
         print(Dono)
+        #判斷次數
+        print(DoNo(Dono))
         if Dono != 0 :
             for i in range (0,DoNo(Dono)):
                 ProductInfo.itemid = JData["items"][i]['item_basic']["itemid"]
@@ -86,10 +87,10 @@ for row in list(rows):  # 遍歷每行資料
                 #print(ProductInfo.price)
                 #print(ProductInfo.adskeyword)
                 Pdata = [keyword,ProductInfo.itemid,ProductInfo.shopid,ProductInfo.name,ProductInfo.price]
-                wb = openpyxl.load_workbook('ShopData.xlsx')
+                wb = openpyxl.load_workbook('ShopDataTT.xlsx')
                 sheet = wb["Data"]
                 sheet.append(Pdata+ProductInfo.images)
-                wb.save("ShopData.xlsx")
+                wb.save("ShopDataTT.xlsx")
         else:
             pass
     else:

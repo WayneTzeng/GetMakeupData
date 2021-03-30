@@ -147,8 +147,8 @@ def GetApi():
                     #Prodata = json.loads(prodata)
                     Prodatasoup = BeautifulSoup(prodata)
                     prodata = Prodatasoup.select("a.btn-popupSKU-addcart")[0].text
-                    #protext = Prodatasoup.select("div.desc p")
-                    print(prodata)
+                    protext = Prodatasoup.findAll("p").text
+                    print(protext)
                     getdata = requests.get(PURL,headers=header).text 
                     Getdata = json.loads(getdata)
                     
@@ -159,7 +159,7 @@ def GetApi():
                     GG = str(Getdata["result1"][6:-7])
                     
                     
-                    Edata = [PID[3],proTitle.string,imgurl,G,GG,prodata]
+                    Edata = [PID[0:3],proTitle.string,imgurl,G,GG,prodata]
                 
                     #print(Edata)
                     
@@ -173,7 +173,7 @@ def GetApi():
                     Prodatasoup = BeautifulSoup(prodata)
                     prodata = Prodatasoup.select("a.btn-popupSKU-addcart")[0].text
                     #protext = Prodatasoup.select("div.desc p")
-                    print(prodata)
+                    #print(prodata)
                     
                     getdata = requests.get(PURL,headers=header).text   
                     Getdata = json.loads(getdata)   
@@ -186,12 +186,12 @@ def GetApi():
                     Edata = [PID,proTitle.string,imgurl,G,GG,prodata]
                     #print(Edata)
                     #print(Edata)
-                wb = openpyxl.load_workbook('EcTestCase.xlsx')
-                sheet = wb["P"]
+                #wb = openpyxl.load_workbook('EcTestCase.xlsx')
+                #sheet = wb["P"]
                 #titles = ("品牌名稱","商品名稱","商品照片URL","價格","價格2")
                 #sheet.append(titles)
-                sheet.append(Edata)
-                wb.save("EcTestCase.xlsx")
+                #sheet.append(Edata)
+                #wb.save("EcTestCase.xlsx")
     except:
         pass        
                 
